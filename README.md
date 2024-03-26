@@ -1,3 +1,2 @@
-# laravel
-##Create new project
+# Create new project
 - composer create-project laravel/laravel:^10 namaProject
