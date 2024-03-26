@@ -1,6 +1,9 @@
 # CMD
 ### Create new project
 - composer create-project laravel/laravel:^10 namaProject
+  
+### Downloading Vendor
+- composer -vvvv install
 
 ### Local Development Server
 - php artisan serve
@@ -21,21 +24,41 @@
 - php artisan db:seed
 - php artisan migrate:fresh --seed
 
+# Controller
+- php artisan make:controller HotelController --resource ,jangan lupa buat di web.php routingnya
+- php artisan make:controller ControllerName --resource -model= ModelName
+- php artisan make:controller HotelController --resource -model= Hotel
+
+
+
+# Routing
 ### simple routing
 ```
 Route::get('/greeting', function(){return 'hello world'})
 ```
+
 ### default page when run LDS
 ```
 Route::get('/', function () {
     return view('dashboard', ['name' => ['Vincent','Hadinata']]);
 });
+
 ```
 ### routing with parameter
 ```
 Route::get('/namaDirektori/{parameter}', function($parameter){
     return 'hello '.$parameter
 });
+```
+
+### routing from resource controller
+```
+Route::resource('hotel', HotelController::class);
+```
+
+### routing from resource controller
+```
+Route::get('report/availablehotelrooms', [HotelController::class, 'availablehotelroom']);
 ```
 # Sintaks
 ```
@@ -270,6 +293,93 @@ class DatabaseSeeder extends Seeder
             HotelSeeder::class,
             ProductSeeder::class,
         ]);
+    }
+}
+```
+# Controler
+### HotelController.php
+```
+<?php
+
+namespace App\Http\Controllers;
+use App\Models\Hotel;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
+
+class HotelController extends Controller
+{
+    public function index()
+    {
+        $queryModel = Hotel::all();
+        return view('hotel.index', compact('queryModel'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        //
+    }
+    public function availablehotelroom(){
+        $queryModel = Hotel::join('products as p', 'hotels.id', '=', 'p.hotel_id')->select('hotels.name', 'hotels.city', DB::raw('sum(p.available_room) as kamar_tersedia'))
+        ->groupBy('hotels.id','hotels.name','hotels.city')
+        -> get();
+//        dd($queryModel);
+        return view('hotel.available_room', compact('queryModel'));
+    }
+
+    public function averagePriceByHotelType()
+    {
+        $hotelData = Hotel::select('t.name as type_name', 'hotels.name as hotel_name',
+            DB::raw('COALESCE(AVG(p.price), 0) AS average_price'))
+            ->Join('types AS t', 'hotels.type_id', '=', 't.id')
+            ->Join('products AS p', 'hotels.id', '=', 'p.hotel_id')
+            ->groupBy('t.name', 'hotels.name')
+            ->get();
+//        dd($hotelData);
+        return view('hotel.avg_price_by_hotel_type', compact('hotelData'));
     }
 }
 ```
