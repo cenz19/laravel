@@ -12,8 +12,15 @@
 
 ### Migration
 - php artisan make:migration create_users_table, users -> nama tabelnya
-- 
-# Routing
+- php artisan make:migration add_users_table, tambah columns
+- php artisan make:migration add_fk_hotel_id_diproducts_id_dihotels_table, tambah columns
+- php artisan migrate
+
+### Seeder
+- php artisan make:seeder HotelSeeder
+- php artisan db:seed
+- php artisan migrate:fresh --seed
+
 ### simple routing
 ```
 Route::get('/greeting', function(){return 'hello world'})
@@ -147,6 +154,8 @@ return new class extends Migration
 };
 ```
 ### Add foreign key
+1 hotel punya banyak produk.<br>
+Tabel produk punya attrbt foreign 'hotel_id' di reference ke 'id' di tabel hotel
 ```
 <?php
 
@@ -180,4 +189,87 @@ return new class extends Migration
         });
     }
 };
+```
+
+# Seeder
+
+### Contoh seeder di HotelSeeder.php
+```
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+
+class HotelSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        //
+        $hotelNames = ['Hilton Hotel', 'Marriott Hotel', 'Sheraton Hotel', 'Hyatt Regency', 'Radisson Blu'];
+        
+        foreach ($hotelNames as $hotelName) {
+            $address = rand(100, 999) . ' ' . ucwords(strtolower($hotelName)) . ' Street';
+            DB::table('hotels')->insert([
+                [
+                    'name' => $hotelName,
+                    'address' => $address,
+                    'postcode' => random_int(1000,10000),
+                    'city' => Str::random(10),
+                    'state' => 'NY',
+                    'country_id' => 1,
+                    'longitude' => -74.005972,
+                    'latitude' => 40.712776,
+                    'phone' => 123,
+                    'fax' => '987-654-3210',
+                    'email' => 'info@' . strtolower(str_replace(' ', '', $hotelName)) . '.com',
+                    'currency' => 'USD',
+                    'accomodation_type' => 'Hotel',
+                    'category' => '5 Stars',
+                    'web' => 'https://www.' . strtolower(str_replace(' ', '', $hotelName)) . '.com',
+                    'type_id' => random_int(1,3),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+            ]);
+        }    
+    }
+}
+```
+### DatabaseSeeder.php
+```
+<?php
+
+namespace Database\Seeders;
+
+// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+
+class DatabaseSeeder extends Seeder
+{
+    /**
+     * Seed the application's database.
+     */
+    public function run(): void
+    {
+        // \App\Models\User::factory(10)->create();
+
+        // \App\Models\User::factory()->create([
+        //     'name' => 'Test User',
+        //     'email' => 'test@example.com',
+        // ]);
+        $this->call([
+            TypeSeeder::class,
+            UserSeeder::class,
+            HotelSeeder::class,
+            ProductSeeder::class,
+        ]);
+    }
+}
 ```
