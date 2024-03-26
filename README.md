@@ -21,8 +21,8 @@
 
 ### Seeder
 - php artisan make:seeder HotelSeeder
-- php artisan db:seed
 - php artisan migrate:fresh --seed
+- php artisan db:seed
 
 ### Controller
 - php artisan make:controller HotelController --resource ,jangan lupa buat di web.php routingnya
