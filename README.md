@@ -27,7 +27,8 @@
   @else
       I don't have records !
   @endif
-- @foreach ($queryModel as $data)
+  ```
+  @foreach ($queryModel as $data)
       <tr>
         <td>{{$data ->id}}</td>
         <td>{{$data ->created_at}}</td>
@@ -37,4 +38,5 @@
         <td>{{$data ->hotel_id}}</td>
         <td>{{$data ->hotels->name}}</td>
       </tr>
-      @endforeach  
+      @endforeach
+  ```
