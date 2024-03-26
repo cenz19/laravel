@@ -20,7 +20,9 @@ Route::get('/', function () {
 ```
 ### routing with parameter
 ```
-Route::get('/namaDirektori/{parameter}', function($parameter){return 'hello '.$parameter});
+Route::get('/namaDirektori/{parameter}', function($parameter){
+    return 'hello '.$parameter
+});
 ```
 # Sintaks
 ```
