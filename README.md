@@ -24,7 +24,7 @@
 - php artisan db:seed
 - php artisan migrate:fresh --seed
 
-# Controller
+### Controller
 - php artisan make:controller HotelController --resource ,jangan lupa buat di web.php routingnya
 - php artisan make:controller ControllerName --resource -model= ModelName
 - php artisan make:controller HotelController --resource -model= Hotel
@@ -296,7 +296,7 @@ class DatabaseSeeder extends Seeder
     }
 }
 ```
-# Controler
+# Controler & Models
 ### HotelController.php
 ```
 <?php
@@ -381,5 +381,47 @@ class HotelController extends Controller
 //        dd($hotelData);
         return view('hotel.avg_price_by_hotel_type', compact('hotelData'));
     }
+}
+```
+
+### Hotel.php
+```
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class Hotel extends Model
+{
+    use HasFactory;
+    public function products(): HasMany
+    {
+        return $this->hasMany(Product::class, 'hotel_id', 'id');
+    }
+}
+```
+
+### Product.php
+```
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class Product extends Model
+{
+
+    use HasFactory;
+    public function hotels(): BelongsTo
+    {
+        return $this->belongsTo(Hotel::class, 'hotel_id');
+    }
+
 }
 ```
