@@ -20,14 +20,16 @@
 - ROute::get('/namaDirektori/{parameter}', function($parameter){return 'hello '.$parameter});
 
 #Sintaks
-- @if (count($record) === 1)
+```
+  @if (count($record) === 1)
       I have one record!
   @elseif (count($record) > 2)
       I have multiple records!
   @else
       I don't have records !
   @endif
-  ```
+```
+```
   @foreach ($queryModel as $data)
       <tr>
         <td>{{$data ->id}}</td>
@@ -39,4 +41,4 @@
         <td>{{$data ->hotels->name}}</td>
       </tr>
       @endforeach
-  ```
+```
