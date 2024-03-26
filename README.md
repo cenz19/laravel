@@ -9,17 +9,20 @@
 
 # Routing
 ### simple routing
-- Route::get('/greeting', function(){return 'hello world'})
-- 
+```
+Route::get('/greeting', function(){return 'hello world'})
+```
 ### default page when run LDS
-- Route::get('/', function () {
+```
+Route::get('/', function () {
     return view('dashboard', ['name' => ['Vincent','Hadinata']]);
 });
-
+```
 ### routing with parameter
-- ROute::get('/namaDirektori/{parameter}', function($parameter){return 'hello '.$parameter});
-
-#Sintaks
+```
+Route::get('/namaDirektori/{parameter}', function($parameter){return 'hello '.$parameter});
+```
+# Sintaks
 ```
   @if (count($record) === 1)
       I have one record!
@@ -42,3 +45,4 @@
       </tr>
       @endforeach
 ```
+# Migration
